@@ -44,7 +44,7 @@ or u can get it from the repo, `util/E-PoS Printer Driver 2024.rar`.
 Start the printer service using:
 
 ```bash
-python test_Printer.py
+python server.py
 ```
 
 The server will start listening for print requests from the queue management system.
