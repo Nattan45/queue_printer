@@ -125,15 +125,18 @@ CORS(app)  # Enable CORS for all routes
 printer_name = win32print.GetDefaultPrinter()
 print(f"🖨️ Default Printer: {printer_name}")
 
+
+
 @app.route('/print', methods=['POST'])
 def print_ticket():
     try:
         data = request.json
         ticket_number = data.get("ticketNumber", "0000")
-        company_name = data.get("companyName", "Unknown Company")
+        company_name = data.get("companyName", "Unknown Organization")
+        service_name = data.get("serviceName", "Unknown ")
         created_at = data.get("createdAt", "Unknown Time")
 
-        print(ticket_number, company_name, created_at)
+        print(ticket_number, company_name, service_name, created_at)
 
         # Open printer
         hprinter = win32print.OpenPrinter(printer_name)
@@ -156,13 +159,13 @@ def print_ticket():
 
         # ✅ Adjust Printing Coordinates (Ensure everything fits)
         x = 100  # X position (left margin)
-        y = -200  # Y position (start from top)
+        y = 100  # Y position (start from top)
 
         line_height = -350  # Adjust spacing (negative moves down)
 
         pdc.TextOut(x, y, "==============================")
         y += line_height
-        pdc.TextOut(x, y, "        Your Ticket")
+        pdc.TextOut(x, y, "                        MESOB Ticket           ")
         y += line_height
         pdc.TextOut(x, y, f"Ticket: {ticket_number}")
         y += line_height
@@ -182,8 +185,15 @@ def print_ticket():
         # Revert to the regular font for the rest of the ticket
         pdc.SelectObject(font_regular)
 
-        pdc.TextOut(x, y, f"Company: {company_name}")
+        # Print Organization Name
+        pdc.TextOut(x, y, f"Orgainzation: {company_name}")
         y += line_height
+
+        pdc.TextOut(x, y, f"Service Name: {service_name}")
+        y += line_height
+
+        
+
         pdc.TextOut(x, y, f"Printed at: {created_at}")
         y += line_height
         pdc.TextOut(x, y, "==============================")
